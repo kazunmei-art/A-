@@ -1,0 +1,1232 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>A-90 完全図鑑サイト</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- ドット風フォント（ゲームっぽい英数字用） -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  background:#050816;
+  color:#f5f7ff;
+  font-family:"Press Start 2P",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:11px;
+}
+.wrapper{
+  max-width:1200px;
+  margin:0 auto;
+  padding:16px 10px 40px;
+}
+
+/* 共通カード */
+.card{
+  background:#111728;
+  border-radius:12px;
+  border:1px solid #2e3650;
+  padding:10px 10px;
+  margin-bottom:12px;
+}
+
+/* タイトル */
+h1{
+  font-size:18px;
+  margin-bottom:8px;
+}
+h2{
+  font-size:14px;
+  margin-bottom:4px;
+}
+h3{
+  font-size:12px;
+  margin-bottom:4px;
+}
+p{
+  line-height:1.6;
+}
+
+/* ボタン */
+.btn{
+  display:inline-block;
+  border:none;
+  border-radius:10px;
+  padding:5px 9px;
+  margin:3px 3px 0 0;
+  font-size:10px;
+  cursor:pointer;
+}
+.btn-main{
+  background:linear-gradient(90deg,#4ade80,#facc15,#fb7185);
+  color:#111827;
+}
+.btn-main:hover{filter:brightness(1.1);}
+.btn-ghost{
+  background:#1f2937;
+  color:#e5e7eb;
+}
+.btn-ghost:hover{background:#374151;}
+.btn-danger{
+  background:#ef4444;
+  color:#fff;
+}
+.btn-danger:hover{background:#b91c1c;}
+
+/* セクションタイトル（開閉） */
+.section-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 8px;
+  border-radius:10px;
+  background:#151c2e;
+  border:1px solid #2e3650;
+  cursor:pointer;
+  margin-bottom:6px;
+}
+.section-title:hover{background:#1f2437;}
+.section-body{display:none;padding-top:4px;}
+
+/* リストの各行 */
+.item-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  padding:5px 6px;
+  margin-bottom:4px;
+  border-radius:9px;
+  background:#0b1120;
+}
+.item-main{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.item-name{
+  font-size:11px;
+}
+.item-tag{
+  font-size:9px;
+  color:#9ca3af;
+}
+.item-buttons{
+  display:flex;
+  gap:4px;
+  flex-wrap:wrap;
+}
+
+/* 罰でフェードアウト */
+.fade-out{opacity:0;transition:opacity .25s linear;}
+
+/* ドットアイコン */
+.dot{
+  width:12px;height:12px;
+  border-radius:3px;
+  image-rendering:pixelated;
+  box-shadow:0 0 0 1px #000 inset,0 0 0 1px #ffffff33;
+}
+.dot-rainbow{background:linear-gradient(90deg,red,orange,yellow,green,cyan,blue,violet);}
+.dot-blue{background:linear-gradient(135deg,#60a5fa,#2563eb);}
+.dot-red{background:linear-gradient(135deg,#f97373,#b91c1c);}
+.dot-green{background:linear-gradient(135deg,#4ade80,#15803d);}
+.dot-dark{background:radial-gradient(circle,#111,#000);}
+.dot-light{background:radial-gradient(circle,#fff,#e5e7eb);}
+.dot-gold{background:linear-gradient(135deg,#facc15,#eab308);}
+.dot-silver{background:linear-gradient(135deg,#e5e7eb,#9ca3af);}
+.dot-bh{background:radial-gradient(circle,#6b7280,#111 50%,#000);}
+.dot-candy{background:linear-gradient(135deg,#f9a8d4,#fef3c7);}
+.dot-fruit{background:linear-gradient(135deg,#fb7185,#facc15);}
+.dot-pet{background:linear-gradient(135deg,#34d399,#22c55e);}
+.dot-event{background:linear-gradient(135deg,#f97316,#fb7185);}
+.dot-badge{background:linear-gradient(135deg,#facc15,#f97316);}
+.dot-spell{background:linear-gradient(135deg,#a855f7,#22d3ee);}
+.dot-tech{background:linear-gradient(135deg,#f97316,#22c55e);}
+.dot-meme{background:linear-gradient(135deg,#f472b6,#facc15);}
+
+/* ホーム ロゴ */
+.logo-wrap{
+  width:160px;height:160px;
+  margin:0 auto 10px;
+  border-radius:30px;
+  padding:4px;
+  background:conic-gradient(from 0deg,red,orange,yellow,green,cyan,blue,violet,red);
+}
+.logo-inner{
+  width:100%;height:100%;
+  border-radius:26px;
+  background:#020617;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#facc15;
+  font-size:26px;
+  text-shadow:0 0 8px #facc15;
+}
+
+/* 設定 */
+.settings-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:4px;
+}
+
+/* 年齢モード（bodyに age-child / age-teen / age-adult） */
+body.age-child .card{border-style:dotted;}
+body.age-child .item-row{border-radius:12px;}
+body.age-child h1{font-size:16px;}
+body.age-teen h1{font-size:18px;}
+body.age-adult h1{font-size:20px;}
+
+/* 画面切り替え */
+#screen-home,#screen-main,#screen-guide{margin-top:4px;}
+
+/* 年齢ごとテキスト切り替え */
+.home-text-child,.home-text-teen,.home-text-adult{display:none;}
+body.age-child .home-text-child{display:block;}
+body.age-teen .home-text-teen{display:block;}
+body.age-adult .home-text-adult{display:block;}
+
+/* 詳細モーダル */
+#detail-modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:#000000cc;
+  z-index:9999;
+}
+.detail-window{
+  width:90%;
+  max-width:520px;
+  border-radius:18px;
+  padding:12px 10px 12px;
+  border:2px solid #facc15;
+  background:#020617;
+  box-shadow:0 0 16px #000;
+  position:relative;
+}
+.detail-title{font-size:13px;margin-bottom:6px;}
+.detail-body{font-size:10px;line-height:1.6;}
+.detail-tag{font-size:9px;color:#9ca3af;margin-bottom:4px;}
+
+/* 詳細背景バリエーション */
+.detail-right {background:radial-gradient(circle,#020617,#020617 40%,#1e293b);}
+.detail-mode  {background:radial-gradient(circle,#0f172a,#020617 40%,#111827);}
+.detail-tech  {background:radial-gradient(circle,#1e293b,#020617 40%,#1f2937);}
+.detail-pet   {background:radial-gradient(circle,#022c22,#020617 40%,#064e3b);}
+.detail-item  {background:radial-gradient(circle,#422006,#020617 40%,#1e293b);}
+.detail-event {background:radial-gradient(circle,#312e81,#020617 40%,#1f2937);}
+.detail-badge {background:radial-gradient(circle,#451a03,#020617 40%,#1f2937);}
+.detail-spell {background:radial-gradient(circle,#1e1b4b,#020617 40%,#111827);}
+
+/* ドット絵 ×ボタン */
+.detail-close{
+  position:absolute;
+  top:6px;right:8px;
+  width:20px;height:20px;
+  cursor:pointer;
+}
+.detail-close-inner{
+  width:100%;height:100%;
+  image-rendering:pixelated;
+  background:
+    linear-gradient(45deg,transparent 0 35%,#f97373 36% 64%,transparent 65% 100%),
+    linear-gradient(135deg,transparent 0 35%,#f97373 36% 64%,transparent 65% 100%);
+  background-color:#111827;
+  border-radius:4px;
+  box-shadow:0 0 0 2px #facc15;
+}
+
+/* パワーセクション */
+.power-value{
+  font-size:18px;
+  margin-top:6px;
+}
+.power-bar{
+  width:100%;
+  height:12px;
+  border-radius:6px;
+  background:#020617;
+  overflow:hidden;
+  margin-top:4px;
+}
+.power-fill{
+  height:100%;
+  width:1%;
+  background:linear-gradient(90deg,#4ade80,#facc15,#f97316,#ef4444);
+}
+
+/* 小さなクレジット */
+.footer{
+  text-align:center;
+  font-size:8px;
+  margin-top:14px;
+  color:#9ca3af;
+}
+
+/* ===== テーマ（背景15色） ===== */
+body.theme-dark{background:#050816;color:#f5f7ff;}
+body.theme-light{
+  background:#f9fafb;
+  color:#111827;
+}
+body.theme-light .card{
+  background:#e5e7eb;
+  border-color:#9ca3af;
+}
+body.theme-light .item-row{
+  background:#d1d5db;
+}
+body.theme-light .section-title{
+  background:#d1d5db;
+  border-color:#9ca3af;
+}
+body.theme-light .logo-inner{
+  background:#f9fafb;
+  color:#7c2d12;
+}
+body.theme-a90{
+  background:#020617;
+  color:#e5e7eb;
+}
+body.theme-a90 .card{
+  background:#020617;
+  border-color:#4b5563;
+}
+
+/* 追加カラー */
+body.theme-red{background:#330000;color:#ffe5e5;}
+body.theme-blue{background:#001a33;color:#dbeafe;}
+body.theme-green{background:#002e1a;color:#d1fae5;}
+body.theme-yellow{background:#332b00;color:#fff7cc;}
+body.theme-purple{background:#1e0033;color:#f3e8ff;}
+body.theme-pink{background:#330018;color:#ffd6e7;}
+body.theme-orange{background:#331a00;color:#ffe2cc;}
+body.theme-cyan{background:#003333;color:#ccffff;}
+body.theme-gray{background:#1a1a1a;color:#e5e5e5;}
+body.theme-brown{background:#2b1a00;color:#f5e9da;}
+body.theme-silver{background:#d1d5db;color:#111827;}
+body.theme-gold{background:#facc15;color:#3f3f00;}
+body.theme-rainbow{
+  background:linear-gradient(135deg,red,orange,yellow,green,blue,indigo,violet);
+  color:#ffffff;
+}
+body.theme-sky{
+  background:linear-gradient(#87cefa,#e0f7ff);
+  color:#003b66;
+}
+</style>
+</head>
+<body class="theme-dark age-teen">
+
+<div class="wrapper">
+
+  <!-- ===== ホーム画面 ===== -->
+  <div id="screen-home">
+    <div class="logo-wrap"><div class="logo-inner">A-90</div></div>
+    <h1>A-90 解説・権利図鑑（ドット版）</h1>
+
+    <!-- 説明（年齢で文章切り替え） -->
+    <div class="card">
+      <div class="home-text-child">
+        <p>
+          ここは「A-90」の せっていを あつめた ページです。<br>
+          こわさ・わざ・モード・ペット など、<br>
+          ゲームで つかえる アイデアを まとめています。
+        </p>
+        <p style="margin-top:6px;">
+          しょうがくせい むけなので、むずかしい ことばは<br>
+          できるだけ へらして かいてあります。
+        </p>
+      </div>
+
+      <div class="home-text-teen">
+        <p>
+          ドアーズのキャラクター「A-90」をベースにした、<br>
+          権利・モード・技・ペット・イベント・バッチなどの<br>
+          設定をまとめた “現実ゲーム用” 図鑑サイトです。
+        </p>
+        <p style="margin-top:6px;">
+          UI やボタンの話ではなく、<br>
+          「中身の設定」だけに集中して書いてあります。
+        </p>
+      </div>
+
+      <div class="home-text-adult">
+        <p>
+          本サイトは「A-90」世界観のデータベースです。<br>
+          権利（Rights）／モード（Modes）／スキル（Tech）／ペット／イベント／バッジなど、<br>
+          設定資料集として再利用しやすいよう構造化しています。
+        </p>
+        <p style="margin-top:6px;">
+          ゲームデザイン・バランス調整・世界観構築の参考用ドキュメントとしても利用可能です。
+        </p>
+      </div>
+    </div>
+
+    <!-- 設定 -->
+    <div class="card">
+      <h2>設定</h2>
+
+      <h3>対象年齢モード</h3>
+      <div class="settings-row">
+        <button class="btn btn-ghost" onclick="setAge('child')">小学生モード</button>
+        <button class="btn btn-ghost" onclick="setAge('teen')">中学生モード</button>
+        <button class="btn btn-ghost" onclick="setAge('adult')">大人モード</button>
+      </div>
+
+      <h3 style="margin-top:8px;">背景カラー（15色）</h3>
+      <div class="settings-row">
+        <button class="btn btn-ghost" onclick="setTheme('dark')">ダーク</button>
+        <button class="btn btn-ghost" onclick="setTheme('light')">ライト</button>
+        <button class="btn btn-ghost" onclick="setTheme('a90')">A-90カラー</button>
+        <button class="btn btn-ghost" onclick="setTheme('red')">赤</button>
+        <button class="btn btn-ghost" onclick="setTheme('blue')">青</button>
+        <button class="btn btn-ghost" onclick="setTheme('green')">緑</button>
+        <button class="btn btn-ghost" onclick="setTheme('yellow')">黄</button>
+        <button class="btn btn-ghost" onclick="setTheme('purple')">紫</button>
+        <button class="btn btn-ghost" onclick="setTheme('pink')">ピンク</button>
+        <button class="btn btn-ghost" onclick="setTheme('orange')">オレンジ</button>
+        <button class="btn btn-ghost" onclick="setTheme('cyan')">シアン</button>
+        <button class="btn btn-ghost" onclick="setTheme('gray')">グレー</button>
+        <button class="btn btn-ghost" onclick="setTheme('brown')">ブラウン</button>
+        <button class="btn btn-ghost" onclick="setTheme('silver')">シルバー</button>
+        <button class="btn btn-ghost" onclick="setTheme('gold')">ゴールド</button>
+        <button class="btn btn-ghost" onclick="setTheme('rainbow')">レインボー</button>
+        <button class="btn btn-ghost" onclick="setTheme('sky')">空</button>
+      </div>
+    </div>
+
+    <!-- 画面遷移ボタン -->
+    <div class="card">
+      <h2>ページ選択</h2>
+      <button class="btn btn-main" onclick="openMain()">▶ A-90 解説ページへ</button>
+      <button class="btn btn-main" onclick="openGuide()">▶ 攻略説明ページへ</button>
+    </div>
+
+    <div class="footer">A-90 をやってくれてありがとう</div>
+  </div>
+
+  <!-- ===== 解説画面 ===== -->
+  <div id="screen-main" style="display:none;">
+    <h1>A-90 世界解説（権利・モード・技など）</h1>
+    <button class="btn btn-main" onclick="openHome()">◀ ホームに戻る</button>
+
+    <!-- 権利 -->
+    <div class="card">
+      <div class="section-title" onclick="toggleSection('sec-rights')">
+        <span class="dot dot-rainbow"></span><span>1. 権利（Rights）</span>
+      </div>
+      <div class="section-body" id="sec-rights"></div>
+    </div>
+
+    <!-- モード -->
+    <div class="card">
+      <div class="section-title" onclick="toggleSection('sec-modes')">
+        <span class="dot dot-blue"></span><span>2. モード（Modes）</span>
+      </div>
+      <div class="section-body" id="sec-modes"></div>
+    </div>
+
+    <!-- 技 -->
+    <div class="card">
+      <div class="section-title" onclick="toggleSection('sec-tech')">
+        <span class="dot dot-tech"></span><span>3. 技（Tech）</span>
+      </div>
+      <div class="section-body" id="sec-tech"></div>
+    </div>
+
+    <!-- ペット -->
+    <div class="card">
+      <div class="section-title" onclick="toggleSection('sec-pets')">
+        <span class="dot dot-pet"></span><span>4. ペット（Pets）</span>
+      </div>
+      <div class="section-body" id="sec-pets"></div>
+    </div>
+
+    <!-- アイテム -->
+    <div class="card">
+      <div class="section-title" onclick="toggleSection('sec-items')">
+        <span class="dot dot-gold"></span><span>5. アイテム（Items）</span>
+      </div>
+      <div class="section-body" id="sec-items"></div>
+    </div>
+
+    <!-- イベント -->
+    <div class="card">
+      <div class="section-title" onclick="toggleSection('sec-events')">
+        <span class="dot dot-event"></span><span>6. イベント（Events）</span>
+      </div>
+      <div class="section-body" id="sec-events"></div>
+    </div>
+
+    <!-- バッチ -->
+    <div class="card">
+      <div class="section-title" onclick="toggleSection('sec-badges')">
+        <span class="dot dot-badge"></span><span>7. バッチ（Badges）</span>
+      </div>
+      <div class="section-body" id="sec-badges"></div>
+    </div>
+
+    <!-- 呪文 -->
+    <div class="card">
+      <div class="section-title" onclick="toggleSection('sec-spells')">
+        <span class="dot dot-spell"></span><span>8. 呪文（Spells）</span>
+      </div>
+      <div class="section-body" id="sec-spells"></div>
+    </div>
+
+    <!-- パワー 1〜1000% -->
+    <div class="card">
+      <div class="section-title" onclick="toggleSection('sec-power')">
+        <span class="dot dot-red"></span><span>9. A-90 パワー（1%〜1000%）</span>
+      </div>
+      <div class="section-body" id="sec-power">
+        <p>A-90の暴れ具合を 1%〜1000% で設定するためのイメージ用スクリプト設定。</p>
+        <label for="power-range">パワー（1〜1000%）</label><br>
+        <input id="power-range" type="range" min="1" max="1000" value="100" step="1" style="width:100%;">
+        <div class="power-value" id="power-label">100%</div>
+        <div class="power-bar"><div class="power-fill" id="power-fill"></div></div>
+        <p id="power-state" style="margin-top:5px;"></p>
+      </div>
+    </div>
+
+    <div class="footer">A-90 をやってくれてありがとう</div>
+  </div>
+
+  <!-- ===== 攻略画面 ===== -->
+  <div id="screen-guide" style="display:none;">
+    <h1>A-90 攻略説明ページ</h1>
+    <button class="btn btn-main" onclick="openHome()">◀ ホームに戻る</button>
+
+    <div class="card">
+      <h2>攻略カテゴリ</h2>
+      <button class="btn btn-ghost" onclick="openGuideList()">▶ モード攻略を見る</button>
+    </div>
+
+    <!-- モード一覧 -->
+    <div id="guide-list" style="display:none;">
+      <div class="card">
+        <h2>攻略モード一覧</h2>
+        <div id="guide-mode-list"></div>
+      </div>
+    </div>
+
+    <!-- 各モードの説明画面 -->
+    <div id="guide-detail" style="display:none;">
+      <button class="btn btn-main" onclick="openGuideList()">◀ モード一覧に戻る</button>
+      <div class="card">
+        <h2 id="guide-title"></h2>
+        <p id="guide-body"></p>
+      </div>
+    </div>
+
+    <div class="footer">A-90 をやってくれてありがとう</div>
+  </div>
+
+</div>
+
+<!-- ===== 詳細モーダル ===== -->
+<div id="detail-modal">
+  <div class="detail-window detail-right" id="detail-window">
+    <div class="detail-close" onclick="closeDetail()">
+      <div class="detail-close-inner"></div>
+    </div>
+    <div class="detail-tag" id="detail-tag"></div>
+    <div class="detail-title" id="detail-title"></div>
+    <div class="detail-body" id="detail-body"></div>
+  </div>
+</div>
+
+<script>
+// ========== 画面切り替え ==========
+function showScreen(id){
+  document.getElementById('screen-home').style.display='none';
+  document.getElementById('screen-main').style.display='none';
+  document.getElementById('screen-guide').style.display='none';
+  document.getElementById(id).style.display='block';
+}
+function openMain(){showScreen('screen-main');}
+function openHome(){showScreen('screen-home');}
+function openGuide(){showScreen('screen-guide');}
+
+// ========== テーマ・年齢設定 ==========
+function setTheme(type){
+  const themes=[
+    'theme-dark','theme-light','theme-a90','theme-red','theme-blue','theme-green',
+    'theme-yellow','theme-purple','theme-pink','theme-orange','theme-cyan',
+    'theme-gray','theme-brown','theme-silver','theme-gold','theme-rainbow','theme-sky'
+  ];
+  themes.forEach(t=>document.body.classList.remove(t));
+  document.body.classList.add('theme-'+type);
+}
+function setAge(mode){
+  document.body.classList.remove('age-child','age-teen','age-adult');
+  if(mode==='child') document.body.classList.add('age-child');
+  else if(mode==='adult') document.body.classList.add('age-adult');
+  else document.body.classList.add('age-teen');
+}
+
+// ========== セクション開閉 ==========
+function toggleSection(id){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.style.display = (el.style.display==='block') ? 'none' : 'block';
+}
+
+// ========== データ定義（君のリスト） ==========
+
+// 権利
+const RIGHTS = [
+  {name:"A-90権利", dot:"dot-rainbow", cat:"right",
+   tag:"メイン権利",
+   desc:"A-90そのものを象徴する中心権利。ノイズ・奇襲・瞬間接近など、すべてのA-90らしさを底上げする。"},
+  {name:"超闇の権利", dot:"dot-dark", cat:"right",
+   tag:"闇系",
+   desc:"光をほぼ消し去る濃い闇を生み出す権利。ホラー演出や視界制限に向く。"},
+  {name:"超極闇の権利", dot:"dot-bh", cat:"right",
+   tag:"闇系／最上位",
+   desc:"闇が極限まで濃くなり、方向感覚まで狂わせる危険権利。闇モードと相性が良い。"},
+  {name:"ブルー権利", dot:"dot-blue", cat:"right",
+   tag:"色系",
+   desc:"青色のイメージ。落ち着きと集中力を上げ、ノイズに動じにくくする。"},
+  {name:"レッド権利", dot:"dot-red", cat:"right",
+   tag:"色系／攻撃",
+   desc:"赤色の攻撃的な権利。A-90の突進やラッシュ系の威力を高める。"},
+  {name:"レインボー権利", dot:"dot-rainbow", cat:"right",
+   tag:"色系／万能",
+   desc:"虹色の万能権利。攻撃・防御・運を少しずつ底上げする。"},
+  {name:"シルバー権利", dot:"dot-silver", cat:"right",
+   tag:"色系／防御",
+   desc:"銀色の守り特化権利。ガード権利や盾系の技と組み合わせやすい。"},
+  {name:"ゴールド権利", dot:"dot-gold", cat:"right",
+   tag:"色系／レア",
+   desc:"金色のレア権利。報酬やドロップ率を上げる、ごほうび系設定に向く。"},
+  {name:"最弱権利", dot:"dot-light", cat:"right",
+   tag:"ネタ",
+   desc:"あえて弱くなる権利。縛りプレイ・ネタ配信用として使われる。"},
+  {name:"最強権利", dot:"dot-red", cat:"right",
+   tag:"ぶっ壊れ",
+   desc:"すべての能力が上がりすぎる最強権利。バランス無視のロマン枠。"},
+  {name:"ダンス権利", dot:"dot-candy", cat:"right",
+   tag:"ネタ演出",
+   desc:"敵味方が踊りだしそうな動きになる権利。ギャグ回向け。"},
+  {name:"てってんの権利", dot:"dot-candy", cat:"right",
+   tag:"特殊",
+   desc:"名前だけ伝わる謎の権利。書き方が判明していないため、詳細はプレイヤーの想像に任される。"},
+  {name:"即死権利", dot:"dot-red", cat:"right",
+   tag:"危険",
+   desc:"条件を満たすと一瞬で終わる超危険権利。使いすぎ注意の設定。"},
+  {name:"瞬殺権利", dot:"dot-red", cat:"right",
+   tag:"危険",
+   desc:"一瞬で大ダメージを与える権利。ボス戦の切り札ポジション。"},
+  {name:"お菓子権利", dot:"dot-candy", cat:"right",
+   tag:"回復おもしろ系",
+   desc:"お菓子を食べるイメージで元気が回復する権利。見た目がかわいい。"},
+  {name:"キャンディ権利", dot:"dot-candy", cat:"right",
+   tag:"甘い系",
+   desc:"キャンディをモチーフにした権利。少しだけスピードや幸運を上げる。"},
+  {name:"光の権利", dot:"dot-light", cat:"right",
+   tag:"光系",
+   desc:"周囲を明るくする権利。闇の権利と正反対の性質をもつ。"},
+  {name:"ブラックホール権利", dot:"dot-bh", cat:"right",
+   tag:"空間ゆがみ",
+   desc:"周囲のものを中心に引き寄せるイメージの権利。ブラックホールモードとも相性が良い。"},
+  {name:"果物権利", dot:"dot-fruit", cat:"right",
+   tag:"回復バフ",
+   desc:"果物をかじるイメージでちょっとずつ回復・強化していく権利。"},
+  {name:"ネコ権利", dot:"dot-pet", cat:"right",
+   tag:"動物系",
+   desc:"猫のような身のこなしを得る権利。回避・クリティカル上昇などと相性が良い。"},
+  {name:"ブレインロット権利", dot:"dot-rainbow", cat:"right",
+   tag:"ブレインロット",
+   desc:"ブレインロット系キャラとの相性が特に良い権利。頭に残るネタや動きを強化する。"},
+  {name:"ラグランデ権利", dot:"dot-blue", cat:"right",
+   tag:"固有名",
+   desc:"ラグランデ系ミームに合わせて作られた権利。詳細は持ち主だけが知っている設定にしても良い。"},
+  {name:"リリリラリラ権利", dot:"dot-candy", cat:"right",
+   tag:"リズム系",
+   desc:"名前そのものがリズムになっている権利。効果もテンポが良い動きをイメージ。"},
+  {name:"チンパンジーニバナニーニ権利", dot:"dot-candy", cat:"right",
+   tag:"ミーム系",
+   desc:"長い名前のミーム権利。効果そのものもカオスでギャグ寄り。"},
+  {name:"バレリーナカプチーナ権利", dot:"dot-candy", cat:"right",
+   tag:"バレエ系",
+   desc:"バレリーナのように優雅に避け、カプチーノのようにあまい雰囲気の権利。"},
+  {name:"テゥンテゥン権利", dot:"dot-candy", cat:"right",
+   tag:"音ネタ",
+   desc:"テゥンテゥンという効果音が似合う、テンポの速い権利。"},
+  {name:"てててサフール権利", dot:"dot-candy", cat:"right",
+   tag:"音ネタ",
+   desc:"ててて…と連続する動きをイメージした権利。連撃やコンボと相性が良い。"},
+  {name:"ジョブジョブサフール権利", dot:"dot-candy", cat:"right",
+   tag:"音ネタ",
+   desc:"ジョブジョブという音から名付けられた権利。職業（ジョブ）風の設定と組み合わせても面白い。"},
+  {name:"とととサフール権利", dot:"dot-candy", cat:"right",
+   tag:"音ネタ",
+   desc:"ととと、とステップを踏むイメージの権利。素早い移動演出に合う。"},
+  {name:"マテーオー権利", dot:"dot-blue", cat:"right",
+   tag:"固有名",
+   desc:"マテーオーという名のキャラ・ミーム用に作られた権利。"},
+  {name:"ラバッカ権利", dot:"dot-blue", cat:"right",
+   tag:"固有名",
+   desc:"ラバッカ系のネタを強化する権利。詳細はプレイヤーの設定次第。"},
+  {name:"ロスマテーオー権利", dot:"dot-blue", cat:"right",
+   tag:"固有名",
+   desc:"マテーオーの派生のような権利。組み合わせるとコンボが決まる設定も面白い。"},
+  {name:"木の権利", dot:"dot-green", cat:"right",
+   tag:"自然系",
+   desc:"1本の木のようにゆっくり育つ権利。防御・HPがじわじわ増えるイメージ。"},
+  {name:"木三本の権利", dot:"dot-green", cat:"right",
+   tag:"自然系",
+   desc:"木が三本ぶん強くなった権利。木の権利よりもさらに強固な守りをもつ。"},
+  {name:"ボンバルディロの権利", dot:"dot-red", cat:"right",
+   tag:"爆発系",
+   desc:"ボンバルディロという爆発ミームから生まれた権利。大きな爆発演出に合う。"},
+  {name:"テゥリッピトロッピの権利", dot:"dot-candy", cat:"right",
+   tag:"音系ミーム",
+   desc:"テゥリッピトロッピというリズムで動くような楽しい権利。"},
+  {name:"テゥリッピトロッピトロッパテゥリッパの権利", dot:"dot-candy", cat:"right",
+   tag:"長音系ミーム",
+   desc:"非常に長い名前をあえて楽しむ権利。必殺技級のネタとして扱える。"},
+  {name:"バレリーナロロロの権利", dot:"dot-candy", cat:"right",
+   tag:"バレエ系ミーム",
+   desc:"ロロロ…とくるくる回るイメージ。回転攻撃や回避と相性が良い。"},
+  {name:"ブルブルパタピムの権利", dot:"dot-candy", cat:"right",
+   tag:"ふるえ系",
+   desc:"ブルブル震えつつパタピムと動く権利。状態異常演出に使える。"},
+  {name:"オルカレロオルカラの権利", dot:"dot-candy", cat:"right",
+   tag:"謎ミーム",
+   desc:"意味不明さを楽しむ権利。効果も予測不能にしておくと面白い。"},
+  {name:"エクスプレッソの権利", dot:"dot-gold", cat:"right",
+   tag:"コーヒー系",
+   desc:"エスプレッソのように一気に覚醒する権利。短時間だけ能力が跳ね上がる。"},
+  {name:"ボンボンビニぐっしーにの権利", dot:"dot-candy", cat:"right",
+   tag:"長音ミーム",
+   desc:"ボンボンビニぐっしーにという音のリズムそのものが効果になっている権利。"},
+  {name:"ポルバロリルリロりの権利", dot:"dot-candy", cat:"right",
+   tag:"長音ミーム",
+   desc:"言いにくさを楽しむ権利。言うだけで呪文みたいな雰囲気になる。"},
+  {name:"タタタサフールの権利", dot:"dot-candy", cat:"right",
+   tag:"音ネタ",
+   desc:"タタタと連続で動くイメージ。3連攻撃などに合わせやすい。"},
+  {name:"オディンディンディンディンデゥンの権利", dot:"dot-candy", cat:"right",
+   tag:"超長音",
+   desc:"オディンディン…と続く長い音をそのまま権利にしたもの。演出向け。"},
+  {name:"1の権利", dot:"dot-light", cat:"right",
+   tag:"数字",
+   desc:"数字「1」にこだわったシンプル権利。最初の一歩を象徴。"},
+  {name:"2の権利", dot:"dot-light", cat:"right",
+   tag:"数字",
+   desc:"数字「2」にこだわった権利。連続攻撃やペア戦をイメージできる。"},
+  {name:"伝説権利", dot:"dot-gold", cat:"right",
+   tag:"レジェンド",
+   desc:"伝説級の存在だけが持つ権利。設定上の最上位クラスとして扱える。"},
+  {name:"ガード権利", dot:"dot-silver", cat:"right",
+   tag:"防御",
+   desc:"防御力を大きく高めるガード専用権利。盾役に渡したい。"},
+  {name:"管理者の権利", dot:"dot-gold", cat:"right",
+   tag:"管理者",
+   desc:"ゲーム管理者だけが持つ権利。特別コマンドや強制終了権限などをイメージ。"},
+  {name:"超管理者の権利", dot:"dot-gold", cat:"right",
+   tag:"管理者最上位",
+   desc:"管理者のさらに上。世界そのものを書き換えられそうなチート級設定。"},
+  {name:"神の権利", dot:"dot-gold", cat:"right",
+   tag:"神格",
+   desc:"神クラスの存在に与えられる権利。何でもありの想像用。"},
+  {name:"制作者権利", dot:"dot-gold", cat:"right",
+   tag:"制作者",
+   desc:"ゲームの作者だけが持つ権利。隠しコマンド・デバッグ用演出などに使える。"},
+  {name:"初心者権利", dot:"dot-light", cat:"right",
+   tag:"ビギナー",
+   desc:"ゲームを始めたばかりの人に与えられるやさしい権利。"},
+  {name:"SSSランク権利", dot:"dot-gold", cat:"right",
+   tag:"ランク系",
+   desc:"ランク表示の中でも最上位のSSSを示す権利。"},
+  {name:"SSランク権利", dot:"dot-gold", cat:"right",
+   tag:"ランク系",
+   desc:"SSランク帯の権利。かなり強いがSSSには少し届かない位置づけ。"},
+  {name:"Sランク権利", dot:"dot-gold", cat:"right",
+   tag:"ランク系",
+   desc:"Sランククラスの強さを示す一般的な上位権利。"},
+  {name:"Aランク権利", dot:"dot-gold", cat:"right",
+   tag:"ランク系",
+   desc:"安定して強いAランク権利。上級者が普通に使う基本ライン。"},
+  {name:"Bランク権利", dot:"dot-silver", cat:"right",
+   tag:"ランク系",
+   desc:"中堅クラスのBランク。初心者から一歩抜けた程度の強さ。"},
+  {name:"Cランク権利", dot:"dot-silver", cat:"right",
+   tag:"ランク系",
+   desc:"Cランク。まだまだ伸びしろが大きい権利。"},
+  {name:"はてな権利", dot:"dot-light", cat:"right",
+   tag:"謎",
+   desc:"中身が完全に謎の権利。開けてみるまで何が起こるかわからない。"},
+  {name:"びっくりまーく権利", dot:"dot-red", cat:"right",
+   tag:"驚き",
+   desc:"ビックリマークをモチーフにした権利。サプライズ演出に使える。"},
+  {name:"プレゼント権利", dot:"dot-gold", cat:"right",
+   tag:"ギフト",
+   desc:"プレゼントを開けるイメージの権利。ランダムで良いことが起きる。"},
+  {name:"逆立ち権利", dot:"dot-candy", cat:"right",
+   tag:"低知名度",
+   desc:"逆立ちしているような視点や動きになる低知名度権利。"},
+  {name:"運動権利", dot:"dot-green", cat:"right",
+   tag:"低知名度",
+   desc:"運動神経がよくなるイメージの権利。ジャンプや走る力を上げる。"},
+  {name:"自分権利", dot:"dot-light", cat:"right",
+   tag:"低知名度",
+   desc:"“自分らしさ”を強調する特殊権利。プレイヤーごとに効果が違うという設定もできる。"},
+  {name:"アルファベット権利", dot:"dot-light", cat:"right",
+   tag:"低知名度",
+   desc:"A〜Zの文字をモチーフにした権利。文字を並べて暗号遊びもできる。"},
+  {name:"A権利", dot:"dot-light", cat:"right",
+   tag:"低知名度",
+   desc:"アルファベットのAだけを強調した権利。A-90ともこじつけられる。"},
+  {name:"B権利", dot:"dot-light", cat:"right",
+   tag:"低知名度",
+   desc:"アルファベットのBをモチーフにしたシンプル権利。"},
+  {name:"C権利", dot:"dot-light", cat:"right",
+   tag:"低知名度",
+   desc:"アルファベットのCをモチーフにしたシンプル権利。"},
+  {name:"SOS権利", dot:"dot-red", cat:"right",
+   tag:"中知名度",
+   desc:"SOSサインのようにピンチを知らせる権利。危険時の演出に使える。"},
+  {name:"爆発権利", dot:"dot-red", cat:"right",
+   tag:"中知名度",
+   desc:"小さな爆発から大きな爆発までをイメージした権利。"},
+  {name:"犯罪権利", dot:"dot-dark", cat:"right",
+   tag:"中知名度",
+   desc:"ゲーム内だけで“悪役ロールプレイ”をするための権利。現実とは切り離して遊ぶ前提。"},
+  {name:"スマホ権利", dot:"dot-blue", cat:"right",
+   tag:"中知名度",
+   desc:"スマホを使いこなすような情報系権利。遠隔操作や通知演出に向く。"},
+  {name:"ボディーガード権利", dot:"dot-silver", cat:"right",
+   tag:"中知名度",
+   desc:"仲間を守るボディーガード役の権利。攻撃を肩代わりする設定にぴったり。"},
+  {name:"パソコン権利", dot:"dot-blue", cat:"right",
+   tag:"中知名度",
+   desc:"パソコン操作やハッキング風の演出ができる権利。データ世界系のステージに合う。"},
+  {name:"始まりの権利", dot:"dot-light", cat:"right",
+   tag:"スタート",
+   desc:"すべての権利のスタート地点となる特別な権利。チュートリアル的な立ち位置。"}
+];
+
+// モード
+const MODES = [
+  {name:"闇モード", dot:"dot-dark", cat:"mode",
+   tag:"モード",
+   desc:"画面全体が暗くなり、闇系権利が強くなるモード。ホラー寄りのステージ向け。"},
+  {name:"光モード", dot:"dot-light", cat:"mode",
+   tag:"モード",
+   desc:"明るく見やすいモード。回復やサポート系のプレイスタイルに向く。"},
+  {name:"冒険モード", dot:"dot-green", cat:"mode",
+   tag:"モード",
+   desc:"探索・発見をメインにしたモード。イベントや隠し要素が多くなる設定。"},
+  {name:"ワールドモード", dot:"dot-blue", cat:"mode",
+   tag:"モード",
+   desc:"広い世界をぐるぐる回るモード。複数のマップを横断する遊び方に対応。"},
+  {name:"島づくりモード", dot:"dot-green", cat:"mode",
+   tag:"モード",
+   desc:"自分の島を作ったり、飾ったりできるモード。建築・クラフト寄りの遊び用。"},
+  {name:"伝説モード", dot:"dot-gold", cat:"mode",
+   tag:"モード",
+   desc:"伝説権利やレアイベントが多く発生する高レアリティモード。"},
+  {name:"ゴールドモード", dot:"dot-gold", cat:"mode",
+   tag:"モード",
+   desc:"報酬やコイン系が増えやすくなるモード。稼ぎプレイ向け。"},
+  {name:"色モード（色系全部）", dot:"dot-rainbow", cat:"mode",
+   tag:"モード",
+   desc:"ブルー権利・レッド権利・レインボー権利など色系を中心に遊ぶモード。"},
+  {name:"始まりモード", dot:"dot-light", cat:"mode",
+   tag:"モード",
+   desc:"ゲームを最初からじっくり遊ぶ用のモード。チュートリアル＆ストーリー寄り。"},
+  {name:"ブラックホールモード", dot:"dot-bh", cat:"mode",
+   tag:"モード",
+   desc:"ブラックホール権利が主役になるモード。引き寄せ・ワープ・空間ゆがみ演出に特化。"}
+];
+
+// 技
+const TECHS = [
+  {name:"A-90（技）", dot:"dot-tech", cat:"tech",
+   tag:"A-90専用技",
+   desc:"本家A-90の動きをイメージした技。ノイズとともに一気に接近し、プレイヤーを驚かせる。"},
+  {name:"重力波", dot:"dot-tech", cat:"tech",
+   tag:"重力",
+   desc:"相手にエネルギーの重力を当てて連続でHPを減らす"},
+  {name:"死のテレビ", dot:"dot-tech", cat:"tech",
+   tag:"ビーム",
+   desc:"４つのテレビがビームを放つ"},
+  {name:"疾風迅雷", dot:"dot-tech", cat:"tech",
+   tag:"突進",
+   desc:"かぜで相手を吹き飛ばし吹き飛ばし雷で瞬殺"},
+  {name:"ノイズ断裂", dot:"dot-tech", cat:"tech",
+   tag:"追加技",
+   desc:"画面を走るノイズがバサッと裂けるイメージの技。A-90らしさを強調できる。"},
+  {name:"暗黒衝撃弾", dot:"dot-tech", cat:"tech",
+   tag:"追加技",
+   desc:"闇のエネルギーを球状にして放つ技。ブラックホール系と組み合わせると映える。"},
+  {name:"データクラッシュ", dot:"dot-tech", cat:"tech",
+   tag:"追加技",
+   desc:"データが崩壊したようなエフェクトで相手を一時的に行動不能にする技。"}
+];
+
+// ペット
+const PETS = [
+  {name:"犬ペット", dot:"dot-pet", cat:"pet",
+   tag:"基本ペット",
+   desc:"バランス良く能力を上げてくれる犬型ペット。初心者にも扱いやすい。"},
+  {name:"猫ペット", dot:"dot-pet", cat:"pet",
+   tag:"基本ペット",
+   desc:"素早さと回避力を高める猫型ペット。スピード重視のプレイと相性が良い。"},
+  {name:"鳥ペット", dot:"dot-pet", cat:"pet",
+   tag:"動物系",
+   desc:"高いところから状況をチェックしてくれる鳥型ペット。索敵系の設定に向く。"},
+  {name:"うさぎペット", dot:"dot-pet", cat:"pet",
+   tag:"動物系",
+   desc:"ジャンプ力と小回りを上げてくれるうさぎ型ペット。"},
+  {name:"くまペット", dot:"dot-pet", cat:"pet",
+   tag:"動物系",
+   desc:"HPと防御を上げるタンク役ペット。"},
+  {name:"キツネペット", dot:"dot-pet", cat:"pet",
+   tag:"動物系",
+   desc:"トリッキーなスキルと相性が良いキツネ型ペット。"},
+  {name:"パンダペット", dot:"dot-pet", cat:"pet",
+   tag:"動物系",
+   desc:"見た目がかわいい癒やし系ペット。回復系の小バフなどに向く。"},
+  {name:"ミニA-90ペット", dot:"dot-pet", cat:"pet",
+   tag:"A-90系",
+   desc:"小さなA-90の姿をしたペット。本体より弱いがノイズ演出をしてくれる。"}
+];
+
+// アイテム
+const ITEMS = [
+  {name:"A-90リング", dot:"dot-gold", cat:"item",
+   tag:"限定アイテム",
+   desc:"期間限定ショップで販売されるリング。A-90系の技や権利を少し強化する設定。"},
+  {name:"A-90の本", dot:"dot-silver", cat:"item",
+   tag:"25日ログインボーナス",
+   desc:"25日のログインボーナスで1回だけ配布される本。プレイヤー間での配布・販売は禁止のゲーム内専用アイテム。"}
+];
+
+// イベント
+const EVENTS = [
+  {name:"A-90復活記念ログインボーナス", dot:"dot-event", cat:"event",
+   tag:"イベント",
+   desc:"サービス終了からの復活を記念して開催されるイベント。25日にログインしたプレイヤーに『A-90の本』を1回だけ配布する。"},
+  {name:"A-90リング期間限定販売", dot:"dot-event", cat:"event",
+   tag:"イベント",
+   desc:"A-90リングをショップで期間限定販売するイベント。クリスマスイベントと同時期に行う設定もできる。"},
+  {name:"クリスマスイベント", dot:"dot-event", cat:"event",
+   tag:"イベント",
+   desc:"冬の季節限定イベント。プレゼント権利などと相性が良い。"},
+  {name:"ブラックホールイベント", dot:"dot-event", cat:"event",
+   tag:"イベント",
+   desc:"ブラックホール権利・モードが主役になるイベント。空間が崩れていく演出向け。"},
+  {name:"エイリアン襲来？！", dot:"dot-event", cat:"event",
+   tag:"次回イベント案",
+   desc:"次のイベントとして用意されている“エイリアン襲来？！”イベント。宇宙系権利やペットが増えるきっかけになる。"}
+];
+
+// バッチ
+const BADGES = [
+  {name:"闇バッジ", dot:"dot-badge", cat:"badge",
+   tag:"バッチ",
+   desc:"闇モードや闇系権利を極めたプレイヤーに与えられるバッチ。"},
+  {name:"管理者バッジ", dot:"dot-badge", cat:"badge",
+   tag:"バッチ",
+   desc:"管理者の権利を持つ者だけがつけられる特別なバッチ。"},
+  {name:"制作者バッジ", dot:"dot-badge", cat:"badge",
+   tag:"バッチ",
+   desc:"ゲーム制作者にだけ配られるバッチ。裏方の証。"},
+  {name:"A-90バッジ", dot:"dot-badge", cat:"badge",
+   tag:"バッチ",
+   desc:"A-90関連の条件を達成したプレイヤーに与えられる記念バッジ。"},
+  {name:"でんせつSTKバッチ", dot:"dot-badge", cat:"badge",
+   tag:"バッチ",
+   desc:"STK系チャレンジを最高難易度までクリアした証となる伝説級バッチ。"},
+  {name:"STKバッチ", dot:"dot-badge", cat:"badge",
+   tag:"バッチ",
+   desc:"STK系チャレンジの基本バッチ。ここからでんせつSTKを目指す。"},
+  {name:"67バッチ", dot:"dot-meme", cat:"badge",
+   tag:"バッチ／ミーム",
+   desc:"「67」という謎のミームから生まれたバッチ。意味はあえてハッキリさせず、想像に任せる。"}
+];
+
+// 呪文
+const SPELLS = [
+  {name:"エイーリズユール", dot:"dot-spell", cat:"spell",
+   tag:"呪文",
+   desc:"A-90世界で使われる長い呪文。正式形で唱えると瞬殺ができる"},
+  {name:"エイーリ", dot:"dot-spell", cat:"spell",
+   tag:"呪文",
+   desc:"エイーリは回復"},
+  {name:"ズユール", dot:"dot-spell", cat:"spell",
+   tag:"呪文",
+   desc:"相手をゾンビにできる"}
+];
+
+// ========== 共通リスト生成 ==========
+function createItemRow(item){
+  const row = document.createElement('div');
+  row.className='item-row';
+
+  const main = document.createElement('div');
+  main.className='item-main';
+
+  const dot = document.createElement('div');
+  dot.className='dot '+(item.dot||'dot-light');
+  main.appendChild(dot);
+
+  const name = document.createElement('div');
+  name.className='item-name';
+  name.textContent=item.name;
+  main.appendChild(name);
+
+  if(item.tag){
+    const tag=document.createElement('div');
+    tag.className='item-tag';
+    tag.textContent='['+item.tag+']';
+    main.appendChild(tag);
+  }
+
+  row.appendChild(main);
+
+  const btns=document.createElement('div');
+  btns.className='item-buttons';
+
+  const detailBtn=document.createElement('button');
+  detailBtn.className='btn btn-main';
+  detailBtn.textContent='詳細';
+  detailBtn.onclick=function(){
+    openDetail(item);
+  };
+  btns.appendChild(detailBtn);
+
+  const punishBtn=document.createElement('button');
+  punishBtn.className='btn btn-danger';
+  punishBtn.textContent='罰';
+  punishBtn.onclick=function(){
+    row.classList.add('fade-out');
+    setTimeout(()=>row.remove(),250);
+  };
+  btns.appendChild(punishBtn);
+
+  row.appendChild(btns);
+  return row;
+}
+
+function fillSection(list, containerId){
+  const cont=document.getElementById(containerId);
+  if(!cont) return;
+  cont.innerHTML='';
+  list.forEach(item=>{
+    cont.appendChild(createItemRow(item));
+  });
+}
+
+// ========== 詳細モーダル ==========
+function openDetail(item){
+  const modal=document.getElementById('detail-modal');
+  const win=document.getElementById('detail-window');
+  const tag=document.getElementById('detail-tag');
+  const title=document.getElementById('detail-title');
+  const body=document.getElementById('detail-body');
+
+  win.classList.remove('detail-right','detail-mode','detail-tech','detail-pet','detail-item','detail-event','detail-badge','detail-spell');
+  if(item.cat==='right') win.classList.add('detail-right');
+  else if(item.cat==='mode') win.classList.add('detail-mode');
+  else if(item.cat==='tech') win.classList.add('detail-tech');
+  else if(item.cat==='pet') win.classList.add('detail-pet');
+  else if(item.cat==='item') win.classList.add('detail-item');
+  else if(item.cat==='event') win.classList.add('detail-event');
+  else if(item.cat==='badge') win.classList.add('detail-badge');
+  else if(item.cat==='spell') win.classList.add('detail-spell');
+
+  tag.textContent=item.tag?('['+item.tag+']'):'';
+  title.textContent=item.name;
+  body.textContent=item.desc || (item.name+" に関する説明テキスト。");
+
+  modal.style.display='flex';
+}
+function closeDetail(){
+  document.getElementById('detail-modal').style.display='none';
+}
+
+// ========== A-90 パワー 1〜1000% ==========
+function describePower(v){
+  const n=Number(v);
+  if(n<=50)   return "ほぼ休憩中のA-90。ノイズも小さく、ただの気配レベル。";
+  if(n<=150)  return "標準のA-90。ときどきノイズで驚かせてくる通常モード。";
+  if(n<=300)  return "じわっと本気を出し始めたA-90。接近速度やノイズ頻度が上がる。";
+  if(n<=500)  return "半暴走A-90。視界バグや挙動がかなり危険な領域に入る。";
+  if(n<=700)  return "高負荷モードのA-90。回避には本気の集中が必要。";
+  if(n<=900)  return "ほぼフルパワーのA-90。少しの油断で即終了級。";
+  if(n<1000)  return "限界突破寸前A-90。世界のほうが耐えられているか怪しい。";
+  return "1000% OVERDRIVE A-90。仕様を完全にぶち破った暴走状態。";
+}
+function updatePower(){
+  const slider=document.getElementById('power-range');
+  const label=document.getElementById('power-label');
+  const fill=document.getElementById('power-fill');
+  const state=document.getElementById('power-state');
+  const v=Number(slider.value);
+  label.textContent=v+"%";
+  let gauge=v/10; if(gauge>100) gauge=100;
+  fill.style.width=gauge+"%";
+  state.textContent=describePower(v);
+}
+
+// ========== 攻略ページ用データ ==========
+const GUIDE_MODES = [
+  {
+    name:"イージー",
+    desc:"簡単なのでチュートリアルを終わらせてもすぐクリアできるモード、ただ戦ってミッションをクリアするだけ。レベルはあまり上がらないが初心者におすすめ。ただしポイントを貯めたいならおすすめしない。敵には弱い攻撃を連射するだけでOK。ボスにはまあまあ強い攻撃をしないといけない。"
+  },
+  {
+    name:"ノーマル",
+    desc:"いつものお馴染みの普通のモード。ポイントの増える量はふつう。イージーよりも難しいが楽しさがある。楽しいものを求めてるならノーマルをやったほうがいい。敵には自分の中で一番強い攻撃や攻撃の連結、相手によって技を選ぶ。初心者おすすめ技は「77権利」、上級者は「₀,⁰⁰」。ラスボスは木3本でジャンプをさせてエイーリズユール、疾風迅雷、死のテレビ、重力波、A-90、始まりの権利、₀,⁰⁰のコンボを70～100回組むのが一番簡単。"
+  },
+  {
+    name:"ハード",
+    desc:"いつもよりも難しいモード。ポイントの増える量は大量。ノーマルより難しいが楽しさがある。ノーマルをクリアしてから、もっと楽しいものを求めているならハードをやるといい。敵には自分の中で一番強い攻撃や攻撃の連結（今持っているスキルをすべて連結しないと不可能）。権利を取っておくと後から使いやすい。初心者おすすめ技は「₀,⁰⁰権利」、上級者は「コンボ権利」。ラスボスは攻撃を5種類の技でよけて体力を削り、始まりの権利・シークレット権利・ゴット権利で少し弱らせてから、エイーリズユール、疾風迅雷、死のテレビ、重力波、A-90、始まりの権利、₀,⁰⁰、コンボ権利、？？？権利、ブルー権利、レッド権利、イエロー権利、ブラック権利、ピンク権利、シルバー権利、ゴールド権利、ブラック権利、ホワイト権利のコンボをして、最後に合体STKを組むのが一番簡単。"
+  },
+  {
+    name:"ハードコア",
+    desc:"ほぼ不可能なモード。ポイントの増える量は超大量。ハードよりも断然難しい。ハードのミッションまで全部クリアしてから、もっと難しいものを求めている人向け。倒し方は新モードなのであまり公開されていない“極秘攻略”という設定にしても良い。"
+  },
+  {
+    name:"サマー",
+    desc:"夏にやるイベントモード。一番モードが多いモードと言われている。夏限定のステージや、暑さ・海・イベント系のギミックが多く登場する。"
+  },
+  {
+    name:"スノー",
+    desc:"冬にやるイベントモード。最近のスノーは激熱で、権利30個・ミッション100個が解放されている大型イベント。雪・氷・プレゼント系ギミックが多め。"
+  },
+  {
+    name:"光",
+    desc:"光の世界に閉じ込められてしまうモード。抜け出す方法を探しながら、光の権利を集めたり強化したりして攻略していく。"
+  },
+  {
+    name:"闇",
+    desc:"闇の世界に閉じ込められてしまうモード。闇の権利やブラックホール権利と相性が良く、ホラー要素強め。ライト系アイテムが重要。"
+  },
+  {
+    name:"畑",
+    desc:"畑を耕し、ペットを増やしていく一番楽なイベントモード。戦闘が少なく、育成や収穫メインで遊べる。"
+  },
+  {
+    name:"島づくり",
+    desc:"島を作って敵を倒すモード。建築して防衛したり、敵を呼び寄せて戦ったりする「島クリエイト＋バトル」系。"
+  },
+  {
+    name:"エイリアン",
+    desc:"宇宙からのエイリアンが襲来するモード。重力操作・奇襲攻撃・ビームなど、特殊ギミックが多め。エイリアン専用権利やペットも登場予定。"
+  },
+  {
+    name:"UFO",
+    desc:"UFOが飛び回るモード。空中戦メインで、高速回避・レーザー攻撃・ワープギミックなどが特徴。落下ダメージにも注意。"
+  },
+  {
+    name:"始まり",
+    desc:"初めて起きたイベント。ここには伝説の権利がたくさん眠っている。物語の原点となる重要モードで、ストーリー重視のプレイに向いている。"
+  },
+  {
+    name:"000",
+    desc:"00000000000000000000000000000000000000000 という数字世界に入ってしまうモード。マップ全体がバグのように変化し、何が起きるかわからないカオス系。"
+  },
+  {
+    name:"ハッカー",
+    desc:"ハッカーに立ち向かうモード。データ崩壊ステージで、エラー・バグ・強制テレポートなどのギミックが大量に出てくる。"
+  },
+  {
+    name:"車",
+    desc:"車で敵を引きまくるモード。スピード強化権利や運転テクが重要。暴走しすぎると自分も事故るので注意。"
+  },
+  {
+    name:"動物",
+    desc:"動物と戦うモード。中には超能力を持つ動物も登場。動物ペットや権利と組み合わせると有利に戦える。"
+  },
+  {
+    name:"ゴールド",
+    desc:"体力レベルを大きく増やすモード。耐久戦向きで、長期戦ボスと相性が良い。ゴールド権利が特に強化される。"
+  },
+  {
+    name:"ブルー",
+    desc:"ペットのレベルが上がりやすいモード。育成特化で、ブルー権利やペット系ステータスが伸びやすい。"
+  },
+  {
+    name:"レインボー",
+    desc:"全体のレベルが増えるモード。攻撃・防御・運・ペットなど、すべてがバランス良く成長する万能育成モード。"
+  },
+  {
+    name:"列車",
+    desc:"世界一カオスな列車モード。高速で走る列車の上や中で戦う。ギミック・罠・分岐ルートが大量にあって、ハチャメチャな展開になりやすい。"
+  }
+];
+
+// ===== 攻略ページ表示 =====
+function openGuideList(){
+  document.getElementById('guide-list').style.display='block';
+  document.getElementById('guide-detail').style.display='none';
+}
+
+// モード一覧を作成
+function loadGuideModes(){
+  const list = document.getElementById('guide-mode-list');
+  if(!list) return;
+  list.innerHTML = "";
+  GUIDE_MODES.forEach(m=>{
+    const btn=document.createElement('button');
+    btn.className='btn btn-main';
+    btn.style.display='block';
+    btn.style.margin='6px 0';
+    btn.textContent=m.name;
+    btn.onclick=function(){ openGuideDetail(m); };
+    list.appendChild(btn);
+  });
+}
+
+// モード詳細ページ
+function openGuideDetail(m){
+  document.getElementById('guide-list').style.display='none';
+  document.getElementById('guide-detail').style.display='block';
+  document.getElementById('guide-title').textContent = m.name;
+  document.getElementById('guide-body').textContent = m.desc;
+}
+
+// ========== 初期化 ==========
+window.addEventListener('DOMContentLoaded',()=>{
+  // 図鑑部分
+  fillSection(RIGHTS,'sec-rights');
+  fillSection(MODES,'sec-modes');
+  fillSection(TECHS,'sec-tech');
+  fillSection(PETS,'sec-pets');
+  fillSection(ITEMS,'sec-items');
+  fillSection(EVENTS,'sec-events');
+  fillSection(BADGES,'sec-badges');
+  fillSection(SPELLS,'sec-spells');
+
+  // パワーバー
+  const p=document.getElementById('power-range');
+  if(p){
+    p.addEventListener('input',updatePower);
+    updatePower();
+  }
+
+  // 攻略モード一覧
+  loadGuideModes();
+
+  // 最初はホームを表示
+  showScreen('screen-home');
+});
+</script>
+</body>
+</html>
